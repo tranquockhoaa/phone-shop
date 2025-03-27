@@ -1,6 +1,9 @@
 const sequelize = require('../config/database');
 const User = require('./user');
 const Product = require('./product');
+const Color = require('./color');
+const ProductDetails = require('./productDetails');
+const Ram = require('./ram');
 const syncDB = async () => {
   try {
     await sequelize.sync({ alter: true });
@@ -12,4 +15,4 @@ const syncDB = async () => {
 
 syncDB();
 
-module.exports = { User, Product };
+module.exports = { User, Product, Color, ProductDetails, Ram };
