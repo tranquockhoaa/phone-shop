@@ -23,6 +23,7 @@ exports.getAllColor = catchAsync(async (req, res, next) => {
     data: allColor,
   });
 });
+
 exports.getColorByPk = catchAsync(async (req, res, next) => {
   const color = await ColorService.getColorByPk(req.params.id);
   res.status(200).json({

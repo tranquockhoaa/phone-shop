@@ -7,19 +7,19 @@ const sendError = (err, res) => {
   });
 };
 
-const sendErrorProd = (err, res) => {
-  if (err.isOperational) {
-    res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-    });
-  } else {
-    res.status(500).json({
-      status: 'error',
-      message: 'Something went very wrong!',
-    });
-  }
-};
+// const sendErrorProd = (err, res) => {
+//   if (err.isOperational) {
+//     res.status(err.statusCode).json({
+//       status: err.status,
+//       message: err.message,
+//     });
+//   } else {
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Something went very wrong!',
+//     });
+//   }
+// };
 
 const uniqueConstrainError = (err) => {
   return err.errors.map((e) => e.message);
@@ -28,7 +28,7 @@ const uniqueConstrainError = (err) => {
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';2
-  
+
   let error = { ...err };
   const errorName = error.name;
 

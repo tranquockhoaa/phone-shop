@@ -1,22 +1,22 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const ProductDetails = sequelize.define(
-  'product_details',
+const CartDetails = sequelize.define(
+  'cartDetails',
   {
-    product_detail_id: {
+    cartDetails_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    price: {
-      type: DataTypes.FLOAT,
-    },
     quantity: {
       type: DataTypes.INTEGER,
+    },
+    unit_price: {
+      type: DataTypes.FLOAT,
     },
   },
   { timestamps: true },
 );
 
-module.exports = ProductDetails;
+module.exports = CartDetails;

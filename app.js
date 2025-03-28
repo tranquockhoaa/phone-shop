@@ -8,6 +8,8 @@ const productRouter = require('./routes/productRouter');
 const colorRouter = require('./routes/colorRouter');
 const productDetailRouter = require('./routes/productDetailsRouter');
 const ramRouter = require('./routes/ramRouter');
+const brandRouter = require('./routes/brandRouter');
+const cartRouter = require('./routes/cartRouter');
 
 const app = express();
 
@@ -18,9 +20,13 @@ app.use('/api/v1/products', productRouter);
 app.use('/api/v1/color', colorRouter);
 app.use('/api/v1/productDetails', productDetailRouter);
 app.use('/api/v1/ram', ramRouter);
+app.use('/api/v1/brand', brandRouter);
+app.use('/api/v1/cart', cartRouter);
+
 app.all('*', (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl}`));
 });
+
 app.use(errorHandler);
 app.use(globalErrorHandle);
 

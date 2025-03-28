@@ -1,22 +1,21 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const ProductDetails = sequelize.define(
-  'product_details',
+const Brand = sequelize.define(
+  'brands',
   {
-    product_detail_id: {
+    brand_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    price: {
-      type: DataTypes.FLOAT,
+    name: {
+      type: DataTypes.TEXT,
     },
-    quantity: {
-      type: DataTypes.INTEGER,
+    infomation: {
+      type: DataTypes.TEXT,
     },
   },
   { timestamps: true },
 );
-
-module.exports = ProductDetails;
+module.exports = Brand;
