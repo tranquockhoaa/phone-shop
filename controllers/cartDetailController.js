@@ -1,3 +1,4 @@
+const CartDetaiService = require('./../service/cartDetailService');
 const CartDetailService = require('./../service/cartDetailService');
 const catchAsync = require('./../utils/catchAsync');
 
@@ -41,5 +42,13 @@ exports.removeCartDetail = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     message: message,
+  });
+});
+
+exports.changeQuantity = catchAsync(async (req, res, next) => {
+  const cartDetail = await CartDetaiService.changeQuantity(req.params.id,req.params.changeType);
+  res.status(200).json({
+    status: 'success',
+    message: cartDetail,
   });
 });

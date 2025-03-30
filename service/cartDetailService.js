@@ -35,6 +35,17 @@ class CartDetaiService {
       return `cartDetail have been deleted`;
     } else return 'cart not exited';
   }
+
+  static async changeQuantity(id, changeType) {
+    const cartDetail = await CartDetail.findByPk(id);
+    if (!cartDetail) {
+      return 'can not find cartDetail';
+    }
+    if (changeType == 'increase') cartDetail.quantity += 1;
+    if (changeType == 'decrease') cartDetail.quantity -= 1;
+    await cartDetail.save();
+    return cartDetail;
+  }
 }
 
 module.exports = CartDetaiService;

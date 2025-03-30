@@ -11,6 +11,16 @@ const CartDetails = sequelize.define(
     },
     quantity: {
       type: DataTypes.INTEGER,
+      validate: {
+        min: {
+          args: [1],
+          msg: 'Quantity must be more than one',
+        },
+        max: {
+          args: [5],
+          msg: 'Quantity must be less than or equal five',
+        },
+      },
     },
     unit_price: {
       type: DataTypes.FLOAT,

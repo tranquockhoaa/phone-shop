@@ -33,10 +33,7 @@ class CartService {
       },
     });
     if (cartDetail) {
-      const newQuantity = data.quantity;
-      const addQuantity = newQuantity || 1;
-      console.log(addQuantity);
-      cartDetail.quantity += addQuantity;
+      cartDetail.quantity += 1;
       await cartDetail.save();
     } else {
       cartDetail = await CartDetaiService.createCartDetail({
@@ -55,7 +52,7 @@ class CartService {
   }
 
   static async getCartById(id) {
-    const cart = await Cart.findByPk(id);
+    const cart = await CartDetail.findAll({ where: { cart_id: id } });
     return cart;
   }
 

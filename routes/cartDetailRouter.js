@@ -8,5 +8,5 @@ router.put('/:id', cartDetailcontroller.updateCartDetail);
 router.get('/', cartDetailcontroller.getAllCartDetail);
 router.get('/:id', cartDetailcontroller.getCartDetailById);
 router.delete('/:idCart', cartDetailcontroller.removeCartDetail);
-
+router.patch('/:id/quantity/:changeType', cartDetailcontroller.changeQuantity);
 module.exports = router;
