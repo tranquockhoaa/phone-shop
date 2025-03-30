@@ -1,11 +1,11 @@
 const ProductDetails = require('./../models/productDetails');
 
 class ProductDetailsSerVice {
-  static async createProductDetail(dataPro) {
-    console.log(dataPro);
+  static async createProductDetail(data) {
+    console.log(data);
     const newProduceDetail = await ProductDetails.create({
-      price: dataPro.price,
-      quantity: dataPro.quantity,
+      ...data,
+      product_detail_id: undefined,
     });
     return newProduceDetail;
   }

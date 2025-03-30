@@ -4,7 +4,7 @@ class RamService {
   static async createRam(data) {
     console.log('sv running');
     const newRam = await Ram.create({
-      size: data.size,
+      ...data
     });
     return newRam;
   }

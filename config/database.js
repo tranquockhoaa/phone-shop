@@ -1,4 +1,5 @@
 const { Sequelize } = require('sequelize');
+
 require('dotenv').config({
   path: './config.env',
 });
@@ -12,9 +13,9 @@ const sequelize = new Sequelize(
     dialect: 'postgres',
     port: process.env.DB_PORT,
     logging: false,
-    timezone: '+07:00', 
+    timezone: '+07:00',
     dialectOptions: {
-      useUTC: false, 
+      useUTC: false,
     },
   },
 );

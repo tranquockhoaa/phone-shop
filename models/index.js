@@ -8,6 +8,9 @@ const Brand = require('./brand');
 const Image = require('./image');
 const CartDetail = require('./cartDetail');
 const Cart = require('./cart');
+const Review = require('./review');
+defineAssociations = require('./../config/associations');
+defineAssociations();
 
 const syncDB = async () => {
   try {
@@ -30,4 +33,5 @@ module.exports = {
   Image,
   Cart,
   CartDetail,
+  Review,
 };

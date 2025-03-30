@@ -9,6 +9,17 @@ exports.createCart = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.addToCart = catchAsync(async (req, res, next) => {
+  console.log('addToCartController');
+  console.log(req.userId);
+  console.log('userId');
+  const cartDetails = await CartService.addToCart(req.userId, req.body);
+  res.status(200).json({
+    status: 'success',
+    message: cartDetails,
+  });
+});
+
 exports.getAllCart = catchAsync(async (req, res, next) => {
   const allCart = await CartService.getAllCart();
   res.status(200).json({
@@ -32,3 +43,5 @@ exports.updateCart = catchAsync(async (req, res, next) => {
     data: cart,
   });
 });
+
+

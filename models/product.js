@@ -16,9 +16,6 @@ const Product = sequelize.define(
     description: {
       type: DataTypes.TEXT,
     },
-    product_detail_id: {
-      type: DataTypes.INTEGER,
-    },
     brand_id: {
       type: DataTypes.INTEGER,
     },

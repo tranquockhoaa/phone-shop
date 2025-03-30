@@ -3,8 +3,7 @@ const Brand = require('./../models/brand');
 class BrandService {
   static async createBrand(data) {
     const newBrand = await Brand.create({
-      name: data.name,
-      infomation: data.infomation,
+      ...data
     });
     return newBrand;
   }

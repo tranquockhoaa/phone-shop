@@ -2,9 +2,9 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const CartDetails = sequelize.define(
-  'cartDetails',
+  'cart_details',
   {
-    cartDetails_id: {
+    cart_detail_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,

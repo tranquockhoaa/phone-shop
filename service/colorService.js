@@ -3,8 +3,7 @@ const Color = require('./../models/color');
 class ColorService {
   static async createColor(dataColor) {
     const newColor = await Color.create({
-      name: dataColor.name,
-      description: dataColor.description,
+      ...dataColor,
     });
     return newColor;
   }
@@ -14,10 +13,12 @@ class ColorService {
     const allColor = await Color.findAll();
     return allColor;
   }
+
   static async getColorByPk(id) {
     const color = await Color.findByPk(id);
     return color;
   }
+
   static async updateColor(id, dataUpdate) {
     const color = await Color.findByPk(id);
     console.log(color);

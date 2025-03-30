@@ -1,5 +1,6 @@
 const express = require('express');
 const ramController = require('./../controllers/ramController');
+
 router = express.Router();
 
 router.post('/', ramController.createRam);

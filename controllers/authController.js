@@ -23,7 +23,12 @@ const sessionIsValid = catchAsync(async (user) => {
 const deleteKeyRedis = catchAsync(async (partten) => {
   const keys = await redisClient.keys(partten);
   console.log(keys);
-  if (keys.length) await redisClient.del(...keys);
+  if (keys.length)
+    await Promise.all(
+      keys.map((e) => {
+        redisClient.del(e);
+      }),
+    );
   console.log('deleteToken success');
 });
 // sesssion token user id
@@ -42,6 +47,7 @@ const createSendToken = async (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  console.log('signup running');
   const newUser = await User.create({
     account: req.body.account,
     password: req.body.password,
@@ -103,7 +109,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError('The user belonging to this token does no longer exit'),
     );
   }
-  req.user = currentUser;
+  req.userId = currentUser.user_id;
   next();
 });
 
@@ -126,6 +132,7 @@ exports.prevent = catchAsync(async (req, res, next) => {
 });
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
+  console.log('forgot');
   const user = await User.findOne({
     where: { email: req.body.email },
   });
