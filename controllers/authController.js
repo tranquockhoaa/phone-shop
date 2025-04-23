@@ -1,10 +1,10 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('./../models/user');
 const bcrypt = require('bcryptjs');
-const AppError = require('../utils/appError');
-const sendEmail = require('../utils/email');
-const catchAsync = require('../utils/catchAsync');
+const AppError = require('./../utils/appError');
+const sendEmail = require('./../utils/email');
+const catchAsync = require('./../utils/catchAsync');
 const { promisify } = require('util');
 const redisClient = require('./../config/redis');
 const { v4: uuidv4 } = require('uuid');
@@ -47,20 +47,28 @@ const createSendToken = async (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  console.log('signup running');
+  const isRegistered = await User.findOne({ where: { email: req.body.email } });
+  console.log(isRegistered);
+  if (isRegistered) {
+    throw new AppError('this email is registered');
+  }
+
   const newUser = await User.create({
     account: req.body.account,
     password: req.body.password,
     email: req.body.email,
     phone_number: req.body.phone_number,
     full_name: req.body.full_name,
+    birth_date: req.body.birthDate,
+    address: req.body.address,
+    gender: req.body.gender,
   });
   createSendToken(newUser, 200, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
+  console.log(email, password);
   if (!email || !password) {
     return res.status(401).json({
       status: 'Fail',
@@ -132,7 +140,6 @@ exports.prevent = catchAsync(async (req, res, next) => {
 });
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  console.log('forgot');
   const user = await User.findOne({
     where: { email: req.body.email },
   });
@@ -140,7 +147,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('There is no user with email address', 404));
   }
-  console.log(req.headers.cookie);
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
   const resetURL = `${req.protocol}://${req.get(
@@ -151,7 +157,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     email: user.email,
     subject: 'forgot password',
     message: resetURL,
-    // cookie: req.cookies,
   });
   res.status(200).json({
     status: 'success',
@@ -229,4 +234,5 @@ exports.logout = catchAsync(async (req, res, next) => {
     status: 'Done',
     message: 'Account has been logout',
   });
+  
 });

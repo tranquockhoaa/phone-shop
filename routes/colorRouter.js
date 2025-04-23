@@ -1,4 +1,4 @@
-const colorController = require('./../controllers/colorController');
+const colorController = require('../controllers/colorController');
 const express = require('express');
 
 const router = express.Router();

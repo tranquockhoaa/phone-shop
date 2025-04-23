@@ -27,7 +27,7 @@ exports.getAllCartDetail = catchAsync(async (req, res, next) => {
     status: 'success',
     data: allCartDetail,
   });
-});
+}); 
 
 exports.getCartDetailById = catchAsync(async (req, res, next) => {
   const cartDetail = await CartDetailService.getCartDetailById(req.params.id);

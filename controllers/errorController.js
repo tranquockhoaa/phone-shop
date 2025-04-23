@@ -1,4 +1,4 @@
-const sequelize = require('../config/database');
+const sequelize = require('./../config/database');
 
 const sendError = (err, res) => {
   res.status(err.statusCode).json({
@@ -26,14 +26,14 @@ const uniqueConstrainError = (err) => {
 };
 
 module.exports = (err, req, res, next) => {
+  console.log('error controler running');
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';2
-
+  err.status = err.status || 'error';
   let error = { ...err };
   const errorName = error.name;
 
   if (errorName == 'SequelizeUniqueConstraintError') {
     error.message = uniqueConstrainError(error);
   }
-  sendError(error, res);
+  next(err);
 };

@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('./../config/database');
 
 const Brand = sequelize.define(
   'brands',
@@ -11,6 +11,7 @@ const Brand = sequelize.define(
     },
     name: {
       type: DataTypes.TEXT,
+      unique: true,
     },
     infomation: {
       type: DataTypes.TEXT,

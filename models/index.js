@@ -1,15 +1,18 @@
-const sequelize = require('../config/database');
+const sequelize = require('./../config/database');
 const User = require('./user');
 const Product = require('./product');
 const Color = require('./color');
 const ProductDetails = require('./productDetails');
-const Ram = require('./ram');
 const Brand = require('./brand');
 const Image = require('./image');
 const CartDetail = require('./cartDetail');
 const Cart = require('./cart');
 const Review = require('./review');
+const Memory = require('./memory');
+const Voucher = require('./voucher');
+const UserVoucher = require('./userVoucher');
 defineAssociations = require('./../config/associations');
+
 defineAssociations();
 
 const syncDB = async () => {
@@ -28,10 +31,13 @@ module.exports = {
   Product,
   Color,
   ProductDetails,
-  Ram,
+ 
   Brand,
   Image,
   Cart,
   CartDetail,
   Review,
+  Memory,
+  Voucher,
+  UserVoucher,
 };

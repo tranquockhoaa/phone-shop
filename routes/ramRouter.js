@@ -1,5 +1,5 @@
 const express = require('express');
-const ramController = require('./../controllers/ramController');
+const ramController = require('../controllers/ramController');
 
 router = express.Router();
 

@@ -1,5 +1,5 @@
 const ProductDetailService = require('./../service/productDetailService');
-const catchAsync = require('../utils/catchAsync');
+const catchAsync = require('./../utils/catchAsync');
 
 exports.createProductDetail = catchAsync(async (req, res, next) => {
   const newProductDetails = await ProductDetailService.createProductDetail(
@@ -12,14 +12,18 @@ exports.createProductDetail = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllProductDetails = catchAsync(async (req, res, next) => {
-  const allProductDetails = await ProductDetailService.getAllProductDetails();
+  const queParam = Object.entries(req.query);
+  const allProductDetails = await ProductDetailService.getAllProductDetails(
+    queParam,
+  );
   res.status(200).json({
     status: 'Done',
     data: allProductDetails,
   });
 });
+
 exports.getProductDetailById = catchAsync(async (req, res, next) => {
-  const productDetail = await ProductDetailService.getAllProductDetails(
+  const productDetail = await ProductDetailService.getProductDetailByid(
     req.params.id,
   );
   res.status(200).json({
@@ -35,5 +39,16 @@ exports.updateProductDetail = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'Done',
     message: updateProDuctDetails,
+  });
+});
+
+exports.filter = catchAsync(async (req, res, next) => {
+  console.log('object');
+  console.log(req.query);
+  const product = await ProductDetailService.filter();
+
+  res.status(200).json({
+    status: 'success',
+    data: product,
   });
 });

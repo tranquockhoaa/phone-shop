@@ -1,4 +1,4 @@
-const { Review } = require('../models');
+const { Review } = require('./../models');
 const ReviewService = require('./../service/reviewService');
 const catchAsync = require('./../utils/catchAsync');
 

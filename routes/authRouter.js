@@ -19,5 +19,6 @@ router.patch(
 //   userController.getUserByFullName,
 // );
 router.post('/logout/:type', authController.logout);
+router.post('/logout', authController.logout);
 
 module.exports = router;

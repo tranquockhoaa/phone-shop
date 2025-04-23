@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('./../config/database');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
@@ -15,11 +15,7 @@ const User = sequelize.define(
       type: DataTypes.UUID,
       allowNull: true,
     },
-    account: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
+
     password: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -46,6 +42,9 @@ const User = sequelize.define(
     address: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    gender: {
+      type: DataTypes.TEXT,
     },
     birth_date: {
       type: DataTypes.DATEONLY,

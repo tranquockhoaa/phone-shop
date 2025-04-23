@@ -1,5 +1,5 @@
 const express = require('express');
-const productDetailsController = require('./../controllers/productDetailController');
+const productDetailsController = require('../controllers/productDetailController');
 const router = express.Router();
 
 router.post('/', productDetailsController.createProductDetail);
