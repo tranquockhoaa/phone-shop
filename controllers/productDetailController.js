@@ -31,6 +31,7 @@ exports.getProductDetailById = catchAsync(async (req, res, next) => {
     data: productDetail,
   });
 });
+
 exports.updateProductDetail = catchAsync(async (req, res, next) => {
   const updateProDuctDetails = await ProductDetailService.updateProDuctDetails(
     req.params.id,
@@ -52,3 +53,5 @@ exports.filter = catchAsync(async (req, res, next) => {
     data: product,
   });
 });
+
+

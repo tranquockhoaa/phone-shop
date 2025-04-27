@@ -1,6 +1,8 @@
 const sequelize = require('./../config/database');
 
 const sendError = (err, res) => {
+  console.log('error controler running');
+
   res.status(err.statusCode).json({
     status: err.status,
     message: err.message,

@@ -11,11 +11,11 @@ const ProductDetails = require('../models/productDetails');
 const Memory = require('../models/memory');
 const Voucher = require('../models/voucher');
 const UserVoucher = require('../models/userVoucher');
+const ReviewImage = require('../models/reviewImage');
 
 const defineAssociations = () => {
   Color.hasMany(ProductDetail, { foreignKey: 'color_id' });
   ProductDetail.belongsTo(Color, { foreignKey: 'color_id' });
-
 
   Brand.hasMany(Product, { foreignKey: 'brand_id' });
   Product.belongsTo(Brand, { foreignKey: 'brand_id' });
@@ -43,7 +43,8 @@ const defineAssociations = () => {
   User.belongsToMany(Voucher, { through: UserVoucher });
   Voucher.belongsToMany(User, { through: UserVoucher });
 
-  Voucher;
-};
+  ProductDetail.hasMany(ReviewImage, { foreignKey: 'product_detail_id' });
+  ReviewImage.belongsTo(ProductDetail, { foreignKey: 'product_detail_id' });
+``};
 
 module.exports = defineAssociations;

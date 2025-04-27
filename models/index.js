@@ -11,6 +11,7 @@ const Review = require('./review');
 const Memory = require('./memory');
 const Voucher = require('./voucher');
 const UserVoucher = require('./userVoucher');
+const ReviewImage = require('./reviewImage');
 defineAssociations = require('./../config/associations');
 
 defineAssociations();
@@ -31,7 +32,7 @@ module.exports = {
   Product,
   Color,
   ProductDetails,
- 
+
   Brand,
   Image,
   Cart,
@@ -40,4 +41,5 @@ module.exports = {
   Memory,
   Voucher,
   UserVoucher,
+  ReviewImage,
 };
