@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('./../config/database');
 
 const Product = sequelize.define(
   'products',
@@ -9,9 +9,11 @@ const Product = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    product_name: {
+    name: {
       type: DataTypes.TEXT,
     },
+    
+    code: { type: DataTypes.TEXT },
     description: {
       type: DataTypes.TEXT,
     },
