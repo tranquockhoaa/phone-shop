@@ -1,7 +1,16 @@
 const Brand = require('./../models/brand');
+const AppError = require('./../utils/appError');
 
 class BrandService {
   static async createBrand(data) {
+    const checkBrand = await Brand.findOne({
+      where: {
+        name: data.name,
+      },
+    });
+    if (checkBrand) {
+      throw new AppError('Brand name already exists', 400);
+    }
     const newBrand = await Brand.create({
       ...data
     });

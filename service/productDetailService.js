@@ -1,15 +1,63 @@
-const { ProductDetails, Product, Brand } = require('../models/index');
+const { ProductDetails, Product, Color, Memory } = require('../models/index');
 const sequelize = require('../config/database');
 const { QueryTypes } = require('sequelize');
+const AppError = require('../utils/appError');
 
 class ProductDetailSerVice {
   static async createProductDetail(data) {
-    console.log(data);
-    const newProduceDetail = await ProductDetails.create({
-      ...data,
-      product_detail_id: undefined,
+    const checkProduct = await Product.findOne({
+      where: {
+        code: data.codeProduct,
+      },
     });
-    return newProduceDetail;
+
+    if (!checkProduct) {
+      throw new AppError('Product not found', 404);
+    }
+
+   
+
+    //get color_id
+    const color = await Color.findOne({
+      where: {
+        name: data.colorName,
+      },
+    });
+    if (!color) {
+      throw new AppError('Color not found', 404);
+    }
+    //get memory
+    const memory = await Memory.findOne({
+      where: {
+        storage_size: data.storageSize,
+        ram_size: data.ramSize,
+      },
+    });
+    if (!memory) {
+      throw new AppError('Memory not found', 404);
+    }
+    
+     const checkProductDetail = await ProductDetails.findOne({where:{
+      color_id: color.color_id,
+      memory_id: memory.memory_id,
+      product_id: checkProduct.product_id,
+    }
+    });
+    if(checkProductDetail){
+      throw new AppError('Product existed', 400);
+    }
+
+    //create product details
+    const newProductDetail = await ProductDetails.create({
+      product_id: checkProduct.product_id,
+      color_id: color.color_id,
+      ram_id: memory.ram_id,
+      memory_id: memory.memory_id,
+      price: data.price,
+      quantity: data.quantity,
+    });
+    
+    return newProductDetail;
   }
 
   // static async getAllProductDetails(data) {

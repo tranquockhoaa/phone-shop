@@ -3,7 +3,8 @@ const Color = require('./../models/color');
 class ColorService {
   static async createColor(dataColor) {
     const newColor = await Color.create({
-      ...dataColor,
+      name: dataColor.colorName,
+      
     });
     return newColor;
   }

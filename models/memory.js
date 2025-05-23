@@ -7,9 +7,13 @@ const Memory = sequelize.define('memories', {
     primaryKey: true,
     autoIncrement: true,
   },
-  size: {
+  storage_size: {
     type: DataTypes.TEXT,
   },
+  ram_size: {
+    type: DataTypes.TEXT,
+  },
+
 });
 
 module.exports = Memory;

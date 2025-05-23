@@ -10,21 +10,12 @@ const ReviewImage = sequelize.define(
       autoIncrement: true,
     },
 
-    code: {
+    name: {
       type: DataTypes.TEXT,
       unique: true,
     },
 
-    image_type: {
-      type: DataTypes.ENUM('product'),
-    },
-    file_name: {
-      type: DataTypes.TEXT,
-    },
 
-    file_path: {
-      type: DataTypes.TEXT,
-    },
   },
   { timestamps: true, underscored: true },
 );

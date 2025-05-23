@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('./../config/database');
+const Color = require('./color');
 
 const Image = sequelize.define(
   'images',
@@ -12,10 +13,10 @@ const Image = sequelize.define(
     name: {
       type: DataTypes.TEXT,
     },
-    file_name: {
-      type: DataTypes.TEXT,
+    price: {
+      type: DataTypes.INTEGER,
     },
-    file_path: DataTypes.TEXT,
+    color:{ type: DataTypes.TEXT}
   },
   { timestamps: true },
 );
