@@ -35,6 +35,18 @@ class BrandService {
     const allBrand = await Brand.findAll();
     return allBrand;
   }
+
+  static async getBrandByName(name) {
+    const brand = await Brand.findOne({
+      where: {
+        name: name,
+      },
+    });
+    if (!brand) {
+      throw new AppError('Brand not found', 404);
+    }
+    return brand;
+  }
 }
 
 module.exports = BrandService;

@@ -1,9 +1,9 @@
-const { ProductDetails, Product, Color, Memory } = require('../models/index');
+const { ProductDetails, Product, Color, Memory, Brand } = require('../models/index');
 const sequelize = require('../config/database');
 const { QueryTypes } = require('sequelize');
 const AppError = require('../utils/appError');
 
-class ProductDetailSerVice {
+class ProductDetailService {
   static async createProductDetail(data) {
     const checkProduct = await Product.findOne({
       where: {
@@ -60,6 +60,26 @@ class ProductDetailSerVice {
     return newProductDetail;
   }
 
+  static async getAllProductDetails() {
+    const productDetails = await ProductDetails.findAll({
+      include: [
+        {
+          model: Product,
+          attributes: ['name', 'code'],
+        },
+        {
+          model: Color,
+          attributes: ['name'],
+        },
+        {
+          model: Memory,
+          attributes: ['storage_size', 'ram_size'],
+        },
+      ],
+    });
+    return productDetails;
+  }
+
   // static async getAllProductDetails(data) {
   //   console.log('service');
   //   const key = ['color_id', 'ram_id', 'product_id', 'memory_id', 'order_by'];
@@ -102,6 +122,25 @@ class ProductDetailSerVice {
       });
     }
   }
+
+  static async getProductForHomePage(data) {
+    const brand = await Brand.findOne({
+      where: {
+        name: data.brand,
+      },
+    });
+    if (!brand) {
+      throw new AppError('Brand not found', 404);
+    }
+
+    const productDetails = await sequelize.query(
+      `SELECT * FROM products where brand_id = ${brand.brand_id} ORDER BY "createdAt" DESC LIMIT 6;`,
+      { type: QueryTypes.SELECT }
+    );
+    return productDetails;
+  }
 }
 
-module.exports = ProductDetailSerVice;
+
+
+module.exports = ProductDetailService;

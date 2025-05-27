@@ -16,6 +16,9 @@ const ProductDetails = sequelize.define(
     quantity: {
       type: DataTypes.INTEGER,
     },
+    discount: {
+      type: DataTypes.TEXT,
+    },
     pubmetadata: {
       type: DataTypes.JSON,
     },
