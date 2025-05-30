@@ -9,11 +9,11 @@ const Cart = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    total_price: {
-      type: DataTypes.FLOAT,
-    },
+    
     status: {
-      type: DataTypes.TEXT,
+      type: DataTypes.ENUM('INACTIVE','ACTIVE','ORDERED','CANCELLED'),
+      defaultValue:'INACTIVE',
+      allowNull:false
     },
   },
   { timestamps: true },

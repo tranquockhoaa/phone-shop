@@ -70,7 +70,7 @@ class ProductService {
         JOIN brands b ON p.brand_id = b.brand_id
         WHERE b.name = '${brandName}'
         ORDER BY p."createdAt" DESC
-        LIMIT 6
+        LIMIT 10
       ),
       product_variants AS (
         SELECT 
