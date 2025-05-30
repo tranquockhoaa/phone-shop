@@ -64,40 +64,35 @@ class ProductService {
     // const limit = queryParams.limit || 6;
     const brandName = queryParams.brandName;
     const query = `
-      WITH newest_products AS (
-        SELECT p.*
-        FROM products p
-        JOIN brands b ON p.brand_id = b.brand_id
-        WHERE b.name = '${brandName}'
-        ORDER BY p."createdAt" DESC
-        LIMIT 10
-      ),
-      product_variants AS (
-        SELECT 
-          p.product_id,
-          p.code,
-          p.name,
-          p."createdAt",
-          pd.price,
-          c.name AS color_name,
-          m.storage_size,
-          m.ram_size,
-          pd.quantity,
-          b.name AS brand_name,
-          ROW_NUMBER() OVER (
-            PARTITION BY p.product_id 
-            ORDER BY pd.price ASC
-          ) AS rn
-        FROM newest_products p
-        JOIN product_details pd ON p.product_id = pd.product_id
-        JOIN memories m ON pd.memory_id = m.memory_id
-        JOIN colors c ON c.color_id = pd.color_id
-        JOIN brands b ON b.brand_id = p.brand_id
-      )
-      SELECT *
-      FROM product_variants
-      WHERE rn = 1;
-      `
+       WITH product_variants AS (
+  SELECT 
+    p.product_id,
+    p.code,
+    p.name,
+    p."createdAt",
+    pd.price,
+    c.name AS color_name,
+    m.storage_size,
+    m.ram_size,
+    pd.quantity,
+    b.name AS brand_name,
+    ROW_NUMBER() OVER (
+      PARTITION BY p.product_id 
+      ORDER BY pd.price ASC
+    ) AS rn
+    FROM products p
+    JOIN brands b ON p.brand_id = b.brand_id
+    JOIN product_details pd ON p.product_id = pd.product_id
+    JOIN memories m ON pd.memory_id = m.memory_id
+    JOIN colors c ON c.color_id = pd.color_id
+    WHERE b.name = '${brandName}'
+    )
+    SELECT *
+    FROM product_variants
+    WHERE rn = 1
+    ORDER BY "createdAt" DESC
+    LIMIT 10;
+    `
       const data = await sequelize.query(query, {
         type: QueryTypes.SELECT,
       });
@@ -121,23 +116,22 @@ class ProductService {
   c.name AS color, 
   b.name AS brand_name,
   product_detail_id as product_detail_id
-FROM 
-  product_details pd
-JOIN 
-  memories m ON pd.memory_id = m.memory_id
-JOIN 
-  colors c ON pd.color_id = c.color_id
-JOIN 
-  products p ON p.product_id = pd.product_id
-JOIN 
-  brands b ON b.brand_id = p.brand_id
-WHERE 
-  p.product_id =  ${product.product_id}
-ORDER BY 
-CAST(regexp_replace(m.ram_size, '[^0-9]', '', 'g') AS INTEGER) ASC,  m.storage_size ASC,
-  price ASC,
-  c.name ASC;
-
+  FROM 
+    product_details pd
+  JOIN 
+    memories m ON pd.memory_id = m.memory_id
+  JOIN 
+    colors c ON pd.color_id = c.color_id
+  JOIN 
+    products p ON p.product_id = pd.product_id
+  JOIN 
+    brands b ON b.brand_id = p.brand_id
+  WHERE 
+    p.product_id =  ${product.product_id}
+  ORDER BY 
+  CAST(regexp_replace(m.ram_size, '[^0-9]', '', 'g') AS INTEGER) ASC,  m.storage_size ASC,
+    price ASC,
+    c.name ASC;
   `;
 
   const rawData = await sequelize.query(query, {
