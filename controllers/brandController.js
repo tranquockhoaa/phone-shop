@@ -33,3 +33,12 @@ exports.getAllBrand = catchAsync(async (req, res, next) => {
     data: allBrand,
   });
 });
+
+exports.getBrandByName = catchAsync(async (req, res, next) => {
+  const brand = await BrandService.getBrandByName(req.query);
+  res.status(200).json({
+    status: 'success',
+    data: brand,
+  });
+});
+

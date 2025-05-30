@@ -54,4 +54,12 @@ exports.filter = catchAsync(async (req, res, next) => {
   });
 });
 
-
+exports.getProductForHomePage = catchAsync(async (req, res, next) => {
+  const product = await ProductDetailService.getProductForHomePage(req.query);
+  res.status(200).json({
+    status: 'Done',
+    data: {
+      product,
+    },
+  });
+});

@@ -5,13 +5,7 @@ const CartDetaiService = require('./cartDetailService');
 const ProductDetails = require('../models/productDetails');
 
 class CartService {
-  static async createCart(data) {
-    const newCart = await Cart.create({
-      data,
-      user_id: data.userId,
-    });
-    return newCart;
-  }
+  
 
   static async addToCart(userId, data) {
     const productDetail = await ProductDetails.findByPk(data.productDetailId);
@@ -20,11 +14,14 @@ class CartService {
       return message;
     }
 
-    let cart = await Cart.findOne({ where: { user_id: userId } });
+    let cart = await Cart.findOne({ where: { user_id: userId },order:[['cart_id','DESC']] });
     if (!cart) {
       data.userId = userId;
       cart = await this.createCart(data);
+    } else if(cart.status === 'ORDERED'|| cart.status === 'CANCELLED'|| cart.status ==='INACTIVE'){
+      cart = await this.createCart(data);
     }
+
     const cartId = cart.cart_id;
     let cartDetail = await CartDetail.findOne({
       where: {
@@ -45,6 +42,8 @@ class CartService {
     }
     return cartDetail;
   }
+
+
 
   static async getAllCart() {
     const allCart = await Cart.findAll();
@@ -67,6 +66,8 @@ class CartService {
 
     return updateData;
   }
+
+  
 }
 
 module.exports = CartService;
