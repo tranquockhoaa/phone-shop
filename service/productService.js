@@ -64,34 +64,34 @@ class ProductService {
     // const limit = queryParams.limit || 6;
     const brandName = queryParams.brandName;
     const query = `
-       WITH product_variants AS (
-  SELECT 
-    p.product_id,
-    p.code,
-    p.name,
-    p."createdAt",
-    pd.price,
-    c.name AS color_name,
-    m.storage_size,
-    m.ram_size,
-    pd.quantity,
-    b.name AS brand_name,
-    ROW_NUMBER() OVER (
-      PARTITION BY p.product_id 
-      ORDER BY pd.price ASC
-    ) AS rn
-    FROM products p
-    JOIN brands b ON p.brand_id = b.brand_id
-    JOIN product_details pd ON p.product_id = pd.product_id
-    JOIN memories m ON pd.memory_id = m.memory_id
-    JOIN colors c ON c.color_id = pd.color_id
-    WHERE b.name = '${brandName}'
-    )
-    SELECT *
-    FROM product_variants
-    WHERE rn = 1
-    ORDER BY "createdAt" DESC
-    LIMIT 10;
+      WITH product_variants AS (
+      SELECT 
+      p.product_id,
+      p.code,
+      p.name,
+      p."createdAt",
+      pd.price,
+      c.name AS color_name,
+      m.storage_size,
+      m.ram_size,
+      pd.quantity,
+      b.name AS brand_name,
+      ROW_NUMBER() OVER (
+        PARTITION BY p.product_id 
+        ORDER BY pd.price ASC
+      ) AS rn
+      FROM products p
+      JOIN brands b ON p.brand_id = b.brand_id
+      JOIN product_details pd ON p.product_id = pd.product_id
+      JOIN memories m ON pd.memory_id = m.memory_id
+      JOIN colors c ON c.color_id = pd.color_id
+      WHERE b.name = '${brandName}'
+      )
+      SELECT *
+      FROM product_variants
+      WHERE rn = 1
+      ORDER BY "createdAt" DESC
+      LIMIT 10;
     `
       const data = await sequelize.query(query, {
         type: QueryTypes.SELECT,
@@ -106,31 +106,34 @@ class ProductService {
     where: { code: codeProduct }
   });
 
+  if(!product) throw(AppError('can not find product'))
+
   const query = `
     SELECT 
-  p.name AS name, 
-  price, 
-  quantity, 
-  m.storage_size, 
-  m.ram_size, 
-  c.name AS color, 
-  b.name AS brand_name,
-  product_detail_id as product_detail_id
-  FROM 
-    product_details pd
-  JOIN 
-    memories m ON pd.memory_id = m.memory_id
-  JOIN 
-    colors c ON pd.color_id = c.color_id
-  JOIN 
-    products p ON p.product_id = pd.product_id
-  JOIN 
-    brands b ON b.brand_id = p.brand_id
-  WHERE 
-    p.product_id =  ${product.product_id}
-  ORDER BY 
-  CAST(regexp_replace(m.ram_size, '[^0-9]', '', 'g') AS INTEGER) ASC,  m.storage_size ASC,
-    price ASC,
+    p.code AS code,
+    pd.product_detail_id as productDetailId,
+    p.name AS name, 
+    price, 
+    quantity, 
+    m.storage_size, 
+    m.ram_size, 
+    c.name AS color, 
+    b.name AS brand_name,
+    product_detail_id as product_detail_id
+    FROM 
+      product_details pd
+    JOIN 
+      memories m ON pd.memory_id = m.memory_id
+    JOIN 
+      colors c ON pd.color_id = c.color_id
+    JOIN 
+      products p ON p.product_id = pd.product_id
+    JOIN 
+      brands b ON b.brand_id = p.brand_id
+    WHERE 
+      p.product_id =  ${product.product_id}
+    ORDER BY 
+CAST(NULLIF(regexp_replace(m.ram_size, '[^0-9]', '', 'g'), '') AS INTEGER) ASC,    price ASC,
     c.name ASC;
   `;
 
@@ -153,10 +156,12 @@ class ProductService {
 
     grouped[key].options.push({
       name: item.name,
+      code: item.code, 
       brandName: item.brand_name,
       color: item.color,
       price: item.price,
-      quantity: item.quantity
+      quantity: item.quantity,
+      productDetailId: item.product_detail_id
     });
   }
 
@@ -177,6 +182,62 @@ class ProductService {
   });
 
   return result;
+}
+
+static async getProductByBrand(queryParams) {
+  const { brandName, _page = 1, _limit = 10, sortPrice } = queryParams;
+  const offset = (_page - 1) * _limit;
+  // Xác định trường sort
+  let orderBy = '"createdAt" DESC';
+  if (sortPrice === 'asc') orderBy = 'price ASC';
+  if (sortPrice === 'desc') orderBy = 'price DESC';
+
+  // Đếm tổng số sản phẩm theo brand
+  const countQuery = `
+    SELECT COUNT(DISTINCT p.product_id) AS total
+    FROM products p
+    JOIN brands b ON p.brand_id = b.brand_id
+    WHERE b.name = '${brandName}'
+  `;
+  const countResult = await sequelize.query(countQuery, { type: QueryTypes.SELECT });
+  const total = countResult[0]?.total || 0;
+
+  // Lấy danh sách sản phẩm phân trang
+  const query = `
+    WITH product_variants AS (
+      SELECT 
+        p.product_id,
+        p.code,
+        p.name,
+        p."createdAt",
+        pd.price,
+        c.name AS color_name,
+        m.storage_size,
+        m.ram_size,
+        pd.quantity,
+        b.name AS brand_name,
+        ROW_NUMBER() OVER (
+          PARTITION BY p.product_id 
+          ORDER BY pd.price ASC
+        ) AS rn
+      FROM products p
+      JOIN brands b ON p.brand_id = b.brand_id
+      JOIN product_details pd ON p.product_id = pd.product_id
+      JOIN memories m ON pd.memory_id = m.memory_id
+      JOIN colors c ON c.color_id = pd.color_id
+      WHERE b.name = '${brandName}'
+    )
+    SELECT *
+    FROM product_variants
+    WHERE rn = 1
+    ORDER BY ${orderBy}
+    LIMIT ${_limit} OFFSET ${offset};
+  `;
+
+  const data = await sequelize.query(query, {
+    type: QueryTypes.SELECT,
+  });
+  return { data, total };
 }
 
 }

@@ -11,14 +11,16 @@ const Memory = require('../models/memory');
 const Voucher = require('../models/voucher');
 const UserVoucher = require('../models/userVoucher');
 const ReviewImage = require('../models/reviewImage');
+const Order = require ('../models/orders')
+const OrderItem = require ('../models/orderItem')
+const Payment = require ('../models/payments')
 
 const defineAssociations = () => {
   Color.hasMany(ProductDetail, { foreignKey: 'color_id' });
   ProductDetail.belongsTo(Color, { foreignKey: 'color_id' });
 
   Product.hasMany(ProductDetail, { foreignKey: 'product_id' });
-  ProductDetail.belongsTo(Product, { foreignKey: 'product_id' });
-
+ProductDetail.belongsTo(Product, { foreignKey: 'product_id', as: 'product' });
   Memory.hasMany(ProductDetail, { foreignKey: 'memory_id' });
   ProductDetail.belongsTo(Memory, { foreignKey: 'memory_id' });
 
@@ -45,6 +47,26 @@ const defineAssociations = () => {
 
   User.belongsToMany(Voucher, { through: UserVoucher });
   Voucher.belongsToMany(User, { through: UserVoucher });
+
+    
+  Order.hasMany(OrderItem, { foreignKey: 'order_id' });
+  OrderItem.belongsTo(Order, { foreignKey: 'order_id' });
+
+  User.hasMany(Order, { foreignKey: 'user_id' });
+  ProductDetail.hasMany(OrderItem, { foreignKey: 'product_detail_id' });
+  OrderItem.belongsTo(ProductDetail, {
+    foreignKey: 'product_detail_id',
+    as: 'productDetail' // <-- THÊM alias
+  });
+
+  Payment.belongsTo(Order, { foreignKey: 'order_id' });
+  Order.hasOne(Payment, { foreignKey: 'order_id' });
+
+  Payment.belongsTo(User, { foreignKey: 'user_id' });
+  User.hasMany(Payment, { foreignKey: 'user_id' });
+
 };
+
+
 
 module.exports = defineAssociations;

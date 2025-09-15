@@ -41,7 +41,19 @@ exports.getInfoDetailByCodeName = catchAsync(async(req,res,next)=>{
   res.status(200).json({
     status: 'Done',
     data:{
-      data
+      data  
     }
   })
+})
+
+exports.getProductByBrand = catchAsync(async(req,res,next)=>{
+  const queryParams = req.query;
+  queryParams._limit = queryParams._limit ? parseInt(queryParams._limit) : 20;
+  // sortPrice: 'asc' hoặc 'desc' (nếu không truyền sẽ mặc định theo createdAt DESC)
+  const result = await ProductService.getProductByBrand(queryParams);
+  res.status(200).json({
+    status: 'Done',
+    products: result.data,
+    total: result.total
+  });
 })
